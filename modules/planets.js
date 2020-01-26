@@ -1,5 +1,3 @@
-const TAU = 2 * Math.PI;
-
 class Planet {
   constructor(x, y) {
     this.x = x;
@@ -18,25 +16,10 @@ class Planet {
 
   setOwner(owner) {
     this.owner = owner;
-
-    if (owner == 0) {
-      this.colour = "grey";
-    }
+    this.colour = getTeamColour(owner);
   }
 }
 
-class Planets {
-  constructor() {
-    this.planets = [];
-  }
-
-  add(x, y) {
-    this.planets.push(new Planet(x, y));
-  }
-
-  draw(ctx) {
-    for (var planet of this.planets) {
-      planet.draw(ctx);
-    }
-  }
+class Planets extends Collection {
+  classType = Planet;
 }
