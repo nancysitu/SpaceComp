@@ -3,7 +3,9 @@ class Ship {
     this.x = x;
     this.y = y;
     this.setOwner(owner);
+
     this.destination = destination;
+    this.population = 50
   }
 
   draw(ctx) {

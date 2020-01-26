@@ -4,6 +4,7 @@ class Planet {
     this.y = y;
     this.setOwner(0);  // Neutral
 
+    this.population = 50
     this.radius = 30;
   }
 
