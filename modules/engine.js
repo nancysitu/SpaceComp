@@ -10,6 +10,6 @@ class Game {
   }
 
   makeShip(source_id, target_id, count) {
-
+    
   }
 }

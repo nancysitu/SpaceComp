@@ -18,8 +18,9 @@ $(document).ready(() => {
 //////////////////////////////
 function init() {
   game = new Game();
-  game.planets.add(200, 200);
-  game.planets.add(400, 400);
+  game.planets.add(1, 200, 200);
+  game.planets.add(0, 400, 200);
+  game.planets.add(2, 400, 400);
 
   console.log(game.planets);
 
