@@ -3,15 +3,11 @@ $(document).ready(() => {
   document.body.onmousedown = () => { return false; } //so page is unselectable
 
 	// Canvas stuff
-	var canvas = $("#canvas")[0];
-	var ctx = canvas.getContext("2d");
-	var w = $("#canvas").width();
-	var h = $("#canvas").height();
-	var mx, my;
+	canvas = $("#canvas")[0];
+	ctx = canvas.getContext("2d");
+	w = $("#canvas").width();
+	h = $("#canvas").height();
 
-  var planets;
-
-  var start = null;
 	init();
 });
 
@@ -21,10 +17,13 @@ $(document).ready(() => {
 //////	Use this code to get everything in order before your game starts
 //////////////////////////////
 function init() {
-  planets = new Planets();
-  planets.add(200, 200);
-  planets.add(400, 400);
+  game = new Game();
+  game.planets.add(200, 200);
+  game.planets.add(400, 400);
 
+  console.log(game.planets);
+
+  start = null;
 	requestAnimationFrame(paint);
 }
 
@@ -32,12 +31,12 @@ function init() {
 ////////	Main Game Engine
 ////////////////////////////////////////////////////
 function paint(timestamp) {
-  if (!start) start = timestamp;
+  if (!start) start = timestamp;  // First frame
   var dTime = (timestamp - start) / 1000;
 
 	ctx.fillStyle = 'black'
 	ctx.fillRect(0,0,w,h);
-  planets.draw(ctx);
+  game.draw(ctx);
 
   start = timestamp;
   requestAnimationFrame(paint);
