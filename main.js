@@ -9,6 +9,7 @@ $(document).ready(() => {
 	var h = $("#canvas").height();
 	var mx, my;
 
+  var planets;
 
 	/////////////////////////////////
 	////////////////////////////////
@@ -20,8 +21,9 @@ $(document).ready(() => {
 	function init() {
   	//////////
   	///STATE VARIABLES
-
-
+    planets = new Planets();
+    planets.add(200, 200);
+    planets.add(400, 400);
 
   	requestAnimationFrame(paint);
   }
@@ -41,6 +43,7 @@ $(document).ready(() => {
 
 		ctx.fillStyle = 'black'
 		ctx.fillRect(0,0,w,h);
+    planets.draw(ctx);
 
     start = timestamp;
     requestAnimationFrame(paint);
