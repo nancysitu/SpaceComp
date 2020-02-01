@@ -20,4 +20,8 @@ class Collection {
       i.draw(ctx);
     }
   }
+
+  find(id) {
+    return this.all[id];
+  }
 }

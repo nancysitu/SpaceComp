@@ -1,9 +1,13 @@
+var canvas;
+var explosionsOn = true;
+
 $(document).ready(() => {
 
   document.body.onmousedown = () => { return false; } //so page is unselectable
 
 	// Canvas stuff
 	canvas = $("#canvas")[0];
+  addListeners(canvas);
 	ctx = canvas.getContext("2d");
 	w = $("#canvas").width();
 	h = $("#canvas").height();
@@ -18,11 +22,27 @@ $(document).ready(() => {
 //////////////////////////////
 function init() {
   game = new Game();
-  game.planets.add(1, 200, 200);
-  game.planets.add(0, 400, 200);
-  game.planets.add(2, 400, 400);
+  game.planets.add(0, 200, 200, 100);
+  game.planets.add(1, 400, 200, 20);
+  game.planets.add(2, 400, 400, 100);
 
-  console.log(game.planets);
+  // Example game
+  setTimeout(() => {
+    game.shoot(0, 1, 50);
+  }, 2000)
+
+  setTimeout(() => {
+    game.shoot(2, 0, 90);
+  }, 5000)
+
+  setTimeout(() => {
+    game.shoot(1, 2, 20);
+  }, 8000)
+
+  setTimeout(() => {
+    game.shoot(0, 1, 20);
+    game.shoot(0, 2, 15);
+  }, 12000)
 
   start = null;
 	requestAnimationFrame(paint);
@@ -37,8 +57,13 @@ function paint(timestamp) {
 
 	ctx.fillStyle = 'black'
 	ctx.fillRect(0,0,w,h);
-  game.draw(ctx);
+  game.draw(ctx, dTime);
+  game.update(dTime);
 
   start = timestamp;
   requestAnimationFrame(paint);
 }/////////////////////////////END PAINT/ GAME ENGINE
+
+function removeQueuedItems(particles) {
+	return particles.filter(i => !i.toBeRemoved);
+}

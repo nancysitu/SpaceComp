@@ -1,25 +1,37 @@
 class Planet {
-  constructor(owner, x, y) {
-    this.x = x;
-    this.y = y;
-    this.setOwner(owner);  // Neutral
+  LINE_WIDTH = 6
 
-    this.population = 50
-    this.radius = 30;
+  constructor(owner, x, y, population) {
+    const radius = 30;
+    this.radius = radius;
+    this.rect = new Rect(x - radius / 2, y - radius / 2, radius, radius);
+
+    this.counter = 0;
+    this.setOwner(owner);
+    this.population = population;
   }
 
   draw(ctx) {
     ctx.strokeStyle = this.colour;
-    ctx.lineWidth = 6;
+    ctx.lineWidth = this.LINE_WIDTH;
 
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, TAU);
+    ctx.arc(...this.rect.center(), this.radius, 0, TAU);
     ctx.stroke();
 
     ctx.textAlign = "center";
     ctx.fillStyle = this.colour;
     ctx.font = "16pt BebasNeue-Regular";
-    ctx.fillText(this.population, this.x, this.y)
+    ctx.fillText(this.population, ...this.rect.center())
+  }
+
+  update(dTime) {
+    this.counter += dTime / 2;
+
+    while (this.counter > 1) {
+      this.population += 1;
+      this.counter -= 1;
+    }
   }
 
   setOwner(owner) {

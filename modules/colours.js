@@ -1,7 +1,7 @@
 const COLOURS = {
   0: "grey",
   1: "red",
-  2: "blue"
+  2: "cyan"
 }
 
 function getTeamColour(id) {
