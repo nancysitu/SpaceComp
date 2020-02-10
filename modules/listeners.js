@@ -18,7 +18,7 @@ function addListeners(canvas) {
   canvas.addEventListener ('mouseover', () => {pause = false;}, false);
 
   canvas.addEventListener('mousemove', (evt) => {
-    var mousePos = getMousePos(canvas, evt);
+    const mousePos = getMousePos(canvas, evt);
 
     mx = mousePos.x;
     my = mousePos.y;
@@ -42,6 +42,6 @@ function getMousePos(canvas, evt) {
 ////////////////////////////////
 
 window.addEventListener('keydown', (evt) => {
-  var key = evt.keyCode;
+  const key = evt.keyCode;
 
 }, false);

@@ -21,28 +21,10 @@ $(document).ready(() => {
 //////	Use this code to get everything in order before your game starts
 //////////////////////////////
 function init() {
-  game = new Game();
-  game.planets.add(0, 200, 200, 100);
-  game.planets.add(1, 400, 200, 20);
-  game.planets.add(2, 400, 400, 100);
-
-  // Example game
-  setTimeout(() => {
-    game.shoot(0, 1, 50);
-  }, 2000)
-
-  setTimeout(() => {
-    game.shoot(2, 0, 90);
-  }, 5000)
-
-  setTimeout(() => {
-    game.shoot(1, 2, 20);
-  }, 8000)
-
-  setTimeout(() => {
-    game.shoot(0, 1, 20);
-    game.shoot(0, 2, 15);
-  }, 12000)
+  game = new Engine();
+  setInterval(() => {
+    game.doTurn();
+  }, 1000);
 
   start = null;
 	requestAnimationFrame(paint);

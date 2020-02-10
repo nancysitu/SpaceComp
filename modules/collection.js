@@ -3,7 +3,7 @@ class Collection {
   classType = null;  // Must be defined
 
   constructor() {
-    this.all = {};
+    this.all = new Map();
     this.nextId = 0;
   }
 
@@ -11,17 +11,21 @@ class Collection {
     var new_obj = new this.classType(...args);
     new_obj.id = this.nextId;
 
-    this.all[this.nextId] = new_obj;
+    this.all.set(this.nextId, new_obj);
     this.nextId += 1;
   }
 
-  draw(ctx) {
-    for (var i of Object.values(this.all)) {
-      i.draw(ctx);
-    }
+  draw(...args) {
+    this.all.forEach((item, i) => {
+      item.draw(...args);
+    });
   }
 
   find(id) {
-    return this.all[id];
+    return this.all.get(id);
+  }
+
+  remove(id) {
+    this.all.delete(id);
   }
 }

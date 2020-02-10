@@ -19,3 +19,7 @@ function randDChance(odds, dTime) {
 function randint(min, max) {
   return Math.floor(randUniform(min, max));
 }
+
+function randChoice(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}

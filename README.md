@@ -18,8 +18,12 @@ Luckily if you have a web browser you're done setting up your environment!
 
 Lesson # | Date | Description | Concepts
 --|--|--|--
-1 | TBD | Introduction to the game | Javascript review
-2 | TBD | Building a bot in class | OOP and exceptions
-3 | TBD | Building your bot | Special data types
-4 | TBD | Building your bot continuted | Asynchronous code
-5 | TBD | Final competition!
+1 | Feb 5 | Introduction to the game | Javascript review
+2 | Feb 12 | Building a bot in class | OOP
+3 | Feb 26 | Building your bot | Exceptions
+4 | Mar 4 | Building your bot continuted | Git
+5 | Mar 11 | Final competition! | TBD
+
+## Lessons
+
+[Lesson 1 Slides](https://docs.google.com/presentation/d/1X4FMKlqMEhk5kmPtbThba_t4WMyAXOV21CRpa8QE5as/edit?usp=sharing)

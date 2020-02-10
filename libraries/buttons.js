@@ -61,13 +61,13 @@ class MenuButton extends Button {
 
 class ToggleButton extends MenuButton {
 	constructor(y, text) {
-	    super(y, text);
+    super(y, text);
 
-        // Make button bigger than default
-        this.rect.width += 20;
-        this.rect.x -= 10;
+    // Make button bigger than default
+    this.rect.width += 20;
+    this.rect.x -= 10;
 
-        this.prefix = text;
+    this.prefix = text;
 	}
 
 	update(toggleVariable) {
@@ -78,7 +78,7 @@ class ToggleButton extends MenuButton {
 			suffix = 'Off';
 		}
 
-		this.text = this.prefix + ' - ' + suffix;
+		this.text = `${this.prefix} - ${suffix}`;
 	}
 }
 

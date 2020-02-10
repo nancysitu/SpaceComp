@@ -17,12 +17,11 @@ class SpaceObject {
   }
 
   move(dTime) {
-    const MAX_SPEED = 250;
-    this.dx = Math.min(this.dx, MAX_SPEED);
-    this.dx = Math.max(this.dx, -MAX_SPEED);
+    this.dx = Math.min(this.dx, this.SPEED);
+    this.dx = Math.max(this.dx, -this.SPEED);
 
-    this.dy = Math.min(this.dy, MAX_SPEED);
-    this.dy = Math.max(this.dy, -MAX_SPEED);
+    this.dy = Math.min(this.dy, this.SPEED);
+    this.dy = Math.max(this.dy, -this.SPEED);
 
     this.rect.x += this.dx * dTime;
     this.rect.y += this.dy * dTime;
@@ -32,28 +31,27 @@ class SpaceObject {
 class Ship extends SpaceObject {
   LINE_WIDTH = 3
   SIZE = 10;
+  SPEED = 100;
 
-  constructor(x, y, owner, destination, destX, destY, pop) {
+  constructor(x, y, destX, destY, // Visualizer
+              health, owner, sourceID, sourceType, targetID) {
     super();
+    this.setOwner(owner);
+
     this.rect = new Rect(0, 0, this.SIZE, this.SIZE);
     this.rect.setCenterx(x);
     this.rect.setCentery(y);
 
-    this.rotation = 0;
+    this.targetPlanet(destX, destY, targetID)
+    this.health = health
 
-    const deltaX = destX - x;
-    const deltaY = destY - y;
-
-    this.dx = deltaX / 2;
-    this.dy = deltaY / 2;
-    this.rotation = Math.atan2(this.dy, this.dx);
-
-    this.setOwner(owner);
-    this.destination = destination;
-    this.population = pop
+    this.sourceID = sourceID;
+    this.sourceType = sourceType;
   }
 
-  draw() {
+  draw(ctx, colourMan) {
+    this.colour = colourMan.getColour(this.owner);
+
     // Connecting these points traces out ship
     this.pointList = [];
 
@@ -71,21 +69,43 @@ class Ship extends SpaceObject {
 
     this.basicDraw(this.colour);
 
-    // Draw population
-    //console.log(this.colour)
+    // Draw health
     ctx.fillStyle = this.colour;
     ctx.font = "12pt BebasNeue-Regular";
-    ctx.fillText(this.population, this.rect.centerx(),
+    ctx.fillText(this.health, this.rect.centerx(),
                  this.rect.centery() - this.SIZE);
   }
 
   setOwner(owner) {
     // Same as planet
-    this.colour = getTeamColour(owner);
     this.owner = owner;
+  }
+
+  serialize() {
+    var out = new Map();
+    out.set("Health", this.health);
+    out.set("ID", this.id);
+    out.set("Owner", this.owner);
+
+    out.set("Source ID", this.sourceID);
+    out.set("Source Type", this.sourceType);
+    out.set("Target", this.targetID);
+
+    return out;
+  }
+
+  targetPlanet(destX, destY, targetID) {
+    const deltaX = destX - this.rect.centerx();
+    const deltaY = destY - this.rect.centery();
+
+    this.rotation = Math.atan2(deltaY, deltaX);
+    this.dx = this.SPEED * Math.cos(this.rotation);
+    this.dy = this.SPEED * Math.sin(this.rotation);
+
+    this.targetID = targetID;
   }
 }
 
-class Ships extends Collection {
+class Ships extends PlayerCollection {
   classType = Ship;
 }
