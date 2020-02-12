@@ -21,7 +21,7 @@ $(document).ready(() => {
 //////	Use this code to get everything in order before your game starts
 //////////////////////////////
 function init() {
-  game = new Engine();
+  game = new GraphicEngine();
   setInterval(() => {
     game.doTurn();
   }, 1000);
@@ -37,10 +37,7 @@ function paint(timestamp) {
   if (!start) start = timestamp;  // First frame
   var dTime = (timestamp - start) / 1000;
 
-	ctx.fillStyle = 'black'
-	ctx.fillRect(0,0,w,h);
-  game.draw(ctx, dTime);
-  game.update(dTime);
+  game.update(ctx, dTime);
 
   start = timestamp;
   requestAnimationFrame(paint);

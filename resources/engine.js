@@ -2,10 +2,12 @@ class Engine {
   constructor() {
     this.bots = new Bots();
     this.explosions = new Explosions();
-    this.planets = new Planets();
-    this.ships = new Ships();
 
-    this.planets.initialize(this.bots.listPlayers());
+    this.active = new Map();
+    this.active.set("Planet", new Planets());
+    this.active.set("Ship", new Ships());
+
+    this.active.get("Planet").initialize(this.bots.listPlayers());
     this.colourManager = new ColourManager(this.bots.listPlayers());
 
     this.resetEvents();
@@ -18,27 +20,17 @@ class Engine {
     this.events.set("Player", new Set());
   }
 
-  draw(ctx, dTime) {
-    this.planets.draw(ctx, this.colourManager);
-    this.ships.draw(ctx, this.colourManager);
-    this.explosions.draw(dTime);
-
-    let helper = new Helper(this.planets, this.ships, this.getWorldState());
-    this.colourManager.draw(ctx, helper);
-  }
-
   // Takes planet ids
-  planetShoot(action) {
-    const source_pid = action.get("Source ID");
+  shoot(action) {
+    const sourceID = action.get("Source ID");
+    const sourceType = action.get("Source Type");
     const target = action.get("Target");
 
-    if (source_pid == target) return;
-
-    const source = this.planets.find(source_pid);
-    const dest = this.planets.find(target);
+    const source = this.active.get(sourceType).find(sourceID);
+    const dest = this.active.get("Planet").find(target);
 
     const shipHealth = Math.min(source.health, action.get("Health"));
-    if (shipHealth == 0) return;
+    if (shipHealth == 0 || source == dest) return;
 
     source.health -= shipHealth;
 
@@ -47,26 +39,29 @@ class Engine {
 
     const owner = source.owner;
 
-    this.ships.add(...srcPos, ...destPos,
-        shipHealth, owner, source_pid, "Planet", target);
+    let helper = new Helper(this.active, this.events, this.getAlivePlayers());
+    this.active.get("Ship").add(...srcPos, ...destPos,
+                   shipHealth, owner, sourceID, "Planet", target, helper);
 
-
+    if (sourceType == "Ship" && source.health == 0) {
+      this.active.get("Ship").remove(sourceID);
+    }
   }
 
   update(dTime) {
-    this.ships.all.forEach((ship, id) => {
+    this.active.get("Ship").all.forEach((ship, id) => {
       ship.move(dTime);
       this.collide(id);
     });
 
-    this.planets.all.forEach((planet, id) => {
+    this.active.get("Planet").all.forEach((planet, id) => {
       planet.update(dTime);
     });
   }
 
   doTurn() {
-    var actions = this.bots.getActions(this.planets, this.ships,
-                                       this.getWorldState());
+    let helper = new Helper(this.active, this.events, this.getAlivePlayers());
+    let actions = this.bots.getActions(helper);
 
     this.resetEvents();
 
@@ -74,47 +69,31 @@ class Engine {
       this.events.get("Player").add(action);
 
       if (action.get("Type") == "Attack") {
-        if (action.get("Source Type") == "Planet") {
-          this.planetShoot(action);
-        }
+        this.shoot(action);
       }
     }
   }
 
-  shipCollided(id) {
-    const destId = this.ships.find(id).targetID;
-    const dest = this.planets.find(destId);
-
-    return inCircle(dest.rect, ...this.ships.find(id).rect.center());
-  }
-
   collide(id) {
-    if (!this.shipCollided(id)) return;
+    const playerShip = this.active.get("Ship").find(id);
+    if (playerShip.delay > 0) return;
 
-    const playerShip = this.ships.find(id);
     const destId = playerShip.targetID;
-    const dest = this.planets.find(destId);
+    const dest = this.active.get("Planet").find(destId);
 
     const pop = playerShip.health;
     const owner = playerShip.owner;
 
-    var offense = dest.takeDamage(owner, pop);
+    var death;
+    var offense;
+
+    [death, offense] = dest.takeDamage(owner, pop);
 
     if (offense) {
       this.explosions.add(...playerShip.rect.center());
     }
 
-    this.ships.remove(id);
-  }
-
-  getWorldState() {
-    let world_state = new Map();
-    world_state.set("Planets", this.planets.exportAll());
-    world_state.set("Ships", this.ships.exportAll());
-    world_state.set("Events", this.events);
-    world_state.set("Alive Players", this.getAlivePlayers());
-
-    return world_state;
+    this.active.get("Ship").remove(id);
   }
 
   getAlivePlayers() {
@@ -122,8 +101,8 @@ class Engine {
     var alive = new Set();
 
     for (var id of players) {
-      let planets = this.planets.exportOwner(id);
-      let ships = this.ships.exportOwner(id);
+      let planets = this.active.get("Planet").exportOwner(id);
+      let ships = this.active.get("Ship").exportOwner(id);
 
       if (planets.size + ships.size > 0) {
         alive.add(id);

@@ -1,6 +1,7 @@
 class Planet {
   INTERVAL = 2;
   LINE_WIDTH = 6;
+  TYPE = "Planet";
 
   constructor(owner, x, y, health) {
     const radius = 30;
@@ -55,19 +56,21 @@ class Planet {
 
   takeDamage(owner, pop) {
     var offense = this.owner != owner;
+    var death = false;
 
     if (this.owner == owner) {
       this.health += pop;
     } else {
       this.health -= pop;
 
-      if (this.health < 0) {  // Switch allegiance
+      death = this.health < 0;
+      if (death) {  // Switch allegiance
         this.setOwner(owner);
         this.health *= -1;
       }
     }
 
-    return offense;
+    return [death, offense];
   }
 }
 
@@ -92,5 +95,13 @@ class Planets extends PlayerCollection {
 
       this.add(id, x, y, Math.round(Math.random() * 100));
     }*/
+  }
+
+  getDistance(idOne, idTwo) {
+    const objOne = this.find(idOne);
+    const objTwo = this.find(idTwo);
+    const dist = objOne.rect.dist(objTwo.rect) - objOne.radius - objTwo.radius;
+
+    return Math.max(0, dist);
   }
 }

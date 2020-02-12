@@ -19,7 +19,7 @@ class ColourManager {
 
     this.colours.forEach((item, i) => {
       let your_state = helper.getYourState(i);
-      let planetCount = your_state.get("Planets").size;;
+      let planetCount = your_state.get("Planet").size;
 
       y += 30;
       ctx.fillStyle = item;

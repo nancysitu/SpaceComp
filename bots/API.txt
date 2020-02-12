@@ -4,15 +4,15 @@ Implement a class with an action method which takes the same arguments as shown 
 your_state
 A map containing the following keys
 {
-    "Ships": [A map of ID -> ship_status]
-    "Planets": [A map of ID -> planet_status]
+    "Ship": [A map of ID -> ship_status]
+    "Planet": [A map of ID -> planet_status]
 }
 
 world_state
 A map containing the following keys
 {
-    "Ships": [A map of ID -> ship_status]
-    "Planets": [A map of ID -> planet_status]
+    "Ship": [A map of ID -> ship_status]
+    "Planet": [A map of ID -> planet_status]
     "Events": [Events map]
     "Alive Players": [A set of (owner) strings]
 }
@@ -34,6 +34,7 @@ A map containing the following keys
     "Source ID": [The ID of the source ship/planet]
     "Source Type": ["Ship" or "Planet"]
     "Target": [A country ID]
+    "Delay": [A number corresponding until time to hit target]
 }
 
 Actions (Idle)

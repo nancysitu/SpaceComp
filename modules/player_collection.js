@@ -31,11 +31,4 @@ class PlayerCollection extends Collection {
     const ids = new Set(this.all.keys());
     return this.export(ids);
   }
-
-  getDistance(idOne, idTwo) {
-    var objOne = this.find(idOne);
-    var objTwo = this.find(idTwo);
-
-    return objOne.rect.dist(objTwo.rect);
-  }
 }

@@ -1,14 +1,16 @@
 class Helper {
-  constructor(planets, ships, world_state) {
-    this.planets = planets;
-    this.ships = ships;
-    this.world_state = world_state;
+  constructor(active, events, alivePlayers) {
+    this.active = active;
+    this.events = events;
+    this.alivePlayers = alivePlayers;
   }
 
   getYourState(owner) {
     let your_state = new Map();
-    your_state.set("Planets", this.planets.exportOwner(owner));
-    your_state.set("Ships", this.ships.exportOwner(owner));
+
+    this.active.forEach((item, i) => {
+      your_state.set(i, item.exportOwner(owner));
+    });
 
     return your_state;
   }
@@ -17,7 +19,7 @@ class Helper {
     // Return a set of IDs
 
     const my_planets = new Set(your_state.get(type).keys());
-    const all_planets = new Set(this.world_state.get(type).keys());
+    const all_planets = new Set(this.getWorldState().get(type).keys());
 
     var other_planets = new Set();
     all_planets.forEach((item, i) => {
@@ -29,11 +31,41 @@ class Helper {
     return other_planets;
   }
 
-  getPlanetDistance(idOne, idTwo) {
-    return this.planets.getDistance(idOne, idTwo);
+  getDistance(type, idOne, idTwo) {
+    return this.active.get(type).getDistance(idOne, idTwo);
   }
 
-  getPlanetDelay(idOne, idTwo) {
-    return this.planets.getDistance(idOne, idTwo) / Ship.SPEED;
+  getPlanetShipDistance(planetID, shipID) {
+    const planet = this.active.get("Planet").find(planetID);
+    const ship = this.active.get("Ship").find(shipID);
+
+    return planet.rect.dist(ship.rect) - planet.radius;
+  }
+
+  getPlanetDelay(planetID, ship) {
+    // Return seconds required for ship to reach planet
+    const planet = this.active.get("Planet").find(planetID);
+    const dist = planet.rect.dist(ship.rect) - planet.radius;
+
+    return Math.max(0, dist / ship.SPEED);
+  }
+
+  getWorldState() {
+    let world_state = new Map();
+    this.active.forEach((item, i) => {
+      world_state.set(i, item.exportAll());
+    });
+
+    world_state.set("Events", this.events);
+    world_state.set("Alive Players", this.alivePlayers);
+
+    return world_state;
+  }
+
+  shipCollided(shipID) {
+    const destId = this.active.get("Ship").find(shipID).targetID;
+    const dest = this.active.get("Planet").find(destId);
+
+    return inCircle(dest.rect, ...this.active.get("Ship").find(id).rect.center());
   }
 }

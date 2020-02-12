@@ -32,9 +32,10 @@ class Ship extends SpaceObject {
   LINE_WIDTH = 3
   SIZE = 10;
   SPEED = 100;
+  TYPE = "Ship";
 
   constructor(x, y, destX, destY, // Visualizer
-              health, owner, sourceID, sourceType, targetID) {
+              health, owner, sourceID, sourceType, targetID, helper) {
     super();
     this.setOwner(owner);
 
@@ -42,7 +43,7 @@ class Ship extends SpaceObject {
     this.rect.setCenterx(x);
     this.rect.setCentery(y);
 
-    this.targetPlanet(destX, destY, targetID)
+    this.targetPlanet(destX, destY, targetID, helper)
     this.health = health
 
     this.sourceID = sourceID;
@@ -76,6 +77,11 @@ class Ship extends SpaceObject {
                  this.rect.centery() - this.SIZE);
   }
 
+  move(dTime) {
+    super.move(dTime);
+    this.delay -= dTime;
+  }
+
   setOwner(owner) {
     // Same as planet
     this.owner = owner;
@@ -83,6 +89,7 @@ class Ship extends SpaceObject {
 
   serialize() {
     var out = new Map();
+    out.set("Delay", this.delay);
     out.set("Health", this.health);
     out.set("ID", this.id);
     out.set("Owner", this.owner);
@@ -94,7 +101,7 @@ class Ship extends SpaceObject {
     return out;
   }
 
-  targetPlanet(destX, destY, targetID) {
+  targetPlanet(destX, destY, targetID, helper) {
     const deltaX = destX - this.rect.centerx();
     const deltaY = destY - this.rect.centery();
 
@@ -103,9 +110,18 @@ class Ship extends SpaceObject {
     this.dy = this.SPEED * Math.sin(this.rotation);
 
     this.targetID = targetID;
+
+    this.delay = helper.getPlanetDelay(targetID, this)
   }
 }
 
 class Ships extends PlayerCollection {
   classType = Ship;
+
+  getDistance(idOne, idTwo) {
+    var objOne = this.find(idOne);
+    var objTwo = this.find(idTwo);
+
+    return objOne.rect.dist(objTwo.rect);
+  }
 }

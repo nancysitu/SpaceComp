@@ -43,7 +43,7 @@ class Explosion {
     this.type = EXPLOSION_TYPES[i];
   }
 
-  draw(dTime) {
+  draw(ctx, dTime) {
     var percentage = this.frame / EXPLOSIONS_HD.length;
     // Make global alpha start at 100% and drop linearly to 0% while moving through frames
     if (this.type == 'Linear') {
@@ -86,9 +86,9 @@ class Explosions {
     this.particles = [];
   }
 
-  draw(dTime) {
+  draw(...args) {
     for (var particle of this.particles) {
-      particle.draw(dTime);
+      particle.draw(...args);
 
       if (particle.frame < 0) {
         particle.toBeRemoved = true;

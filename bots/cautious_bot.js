@@ -2,20 +2,20 @@
 For each planet owned, target the nearest planet aggressively.
 */
 
-class SmartBot { // You must pick a new custom name
-  name = "SmartBot";
+class CautiousBot { // You must pick a new custom name
+  name = "CautiousBot";
 
   action(your_state, world_state, helper) {
     var actions = new Set();
-    var other_planets = helper.getOtherPlayer(your_state, "Planets");
+    var other_planets = helper.getOtherPlayer(your_state, "Planet");
 
     // Do nothing
     if (other_planets.size == 0) return actions;
 
-    your_state.get("Planets").forEach((item, id) => {
+    your_state.get("Planet").forEach((item, id) => {
       if (item.get("Health") > 20) {
         let action = new Map();
-        let pop = Math.min(10, item.get("Health"));
+        let pop = item.get("Health") - 10;
 
         action.set("Health", pop);
         action.set("Type", "Attack");
@@ -23,7 +23,7 @@ class SmartBot { // You must pick a new custom name
         action.set("Source Type", "Planet");
 
 
-        let targetID = SmartBot.closestPlanet(helper, other_planets, id);
+        let targetID = CautiousBot.closestPlanet(helper, other_planets, id);
         action.set("Target", targetID);
 
         actions.add(action);
@@ -38,7 +38,7 @@ class SmartBot { // You must pick a new custom name
     var closest = null;
 
     for (var otherID of other_planets) {
-      let newDist = helper.getPlanetDistance(sourceID, otherID);
+      let newDist = helper.getDistance("Planet", sourceID, otherID);
       if (dist === false || newDist < dist) {
         closest = otherID;
         dist = newDist;
