@@ -17,6 +17,7 @@ class Helper {
 
   getOtherPlayer(your_state, type) {
     // Return a set of IDs
+    // type is "Planet" or "Ship"
 
     const my_planets = new Set(your_state.get(type).keys());
     const all_planets = new Set(this.getWorldState().get(type).keys());
