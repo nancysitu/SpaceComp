@@ -86,15 +86,6 @@ class Planets extends PlayerCollection {
         this.add(id, x, y, Math.round(Math.random() * 100));
       }
     }
-
-    /*
-    for (var i = 0; i < 5; ++i) {
-      var id = "SampleBot";
-      let x = randUniform(100, 1000);
-      let y = randUniform(100, 600);
-
-      this.add(id, x, y, Math.round(Math.random() * 100));
-    }*/
   }
 
   getDistance(idOne, idTwo) {

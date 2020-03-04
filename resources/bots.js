@@ -2,7 +2,7 @@ class Bots {
   constructor() {
     this.bots = new Map();
 
-    const IMPORTS = [SwarmBot, AggressiveBot, CautiousBot];
+    const IMPORTS = [SwarmBot, AggressiveBot, CautiousBot, ClassBot, YourBot];
 
     for (var Class of IMPORTS) {
       this.bots.set(Class.name, new Class());
@@ -14,7 +14,14 @@ class Bots {
 
     this.bots.forEach((bot, name) => {
       let your_state = helper.getYourState(name);
-      let actions = bot.action(your_state, helper.getWorldState(), helper);
+
+      try {
+        var actions = bot.action(your_state, helper.getWorldState(), helper);
+      } catch (e) {
+        console.error(e);
+        return;
+      }
+
 
       // Verify output
       let player_state = helper.getYourState(name);
