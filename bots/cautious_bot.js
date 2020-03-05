@@ -2,8 +2,8 @@
 For each planet owned, target the nearest planet aggressively.
 */
 
-class WinnerBot { // You must pick a new custom name
-  name = "WinnerBot";
+class CautiousBot { // You must pick a new custom name
+  name = "CautiousBot";
 
   action(your_state, world_state, helper) {
     var actions = new Set();
@@ -13,17 +13,17 @@ class WinnerBot { // You must pick a new custom name
     if (other_planets.size == 0) return actions;
 
     your_state.get("Planet").forEach((item, id) => {
-      if (item.get("Health") > 10) {
+      if (item.get("Health") > 20) {
         let action = new Map();
         let pop = item.get("Health") - 10;
 
-        action.set("Health", 100000);
+        action.set("Health", pop);
         action.set("Type", "Attack");
         action.set("Source ID", id);
         action.set("Source Type", "Planet");
 
 
-        let targetID = WinnerBot.closestPlanet(helper, other_planets, id);
+        let targetID = CautiousBot.closestPlanet(helper, other_planets, id);
         action.set("Target", targetID);
 
         actions.add(action);
